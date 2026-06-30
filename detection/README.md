@@ -24,23 +24,23 @@ Validated live on the lab Wazuh manager: a controlled roast of all five SPN serv
 
 ## Live proof (screenshots)
 
-Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller. Each screenshot has a title banner and red callouts; the unannotated originals are in [`screenshots/originals/`](screenshots/originals/).
+Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller. Red callouts highlight the key fields; the unannotated originals are in [`screenshots/originals/`](screenshots/originals/).
 
-1. The rule fires on every RC4 (0x17) service ticket (the roast hit all five SPN accounts):
+**PROOF 1 - The rule detects the Kerberoasting attack.** Filtered on our custom rule in Discover; every malicious RC4 ticket raises an alert.
 
-![PROOF 1: rule.id 100011 fires on the RC4 service tickets in Wazuh Discover](screenshots/100011_rule_fires_5hits.png)
+![rule.id 100011 fires on the RC4 service tickets in Wazuh Discover](screenshots/100011_rule_fires_5hits.png)
 
-2. The malicious event: a service ticket (Event 4769) issued with the weak RC4 cipher (0x17) for svc_report:
+**PROOF 2 - The malicious event: an RC4 service ticket.** A service ticket (Event 4769) issued with the weak RC4 cipher (0x17) for svc_report.
 
-![PROOF 2: the RC4 service-ticket event showing 0x17, svc_report and 4769](screenshots/100011_event_rc4_ticket.png)
+![the RC4 service-ticket event showing 0x17, svc_report and 4769](screenshots/100011_event_rc4_ticket.png)
 
-3. The alert: the event tagged by rule.id 100011 and mapped to MITRE T1558.003 (Kerberoasting):
+**PROOF 3 - Tagged by our rule as Kerberoasting.** The event flagged by rule.id 100011 and mapped to MITRE ATT&CK T1558.003.
 
-![PROOF 3: alert tagged with rule.id 100011 and MITRE T1558.003](screenshots/100011_alert_detail.png)
+![alert tagged with rule.id 100011 and MITRE T1558.003](screenshots/100011_alert_detail.png)
 
-4. No false positives: the same query restricted to AES (0x12) returns nothing, so the rule never matches a normal service ticket:
+**PROOF 4 - Zero false positives on normal traffic.** The same query restricted to AES (0x12) returns nothing, so the rule never matches a normal service ticket.
 
-![PROOF 4: rule.id 100011 with AES 0x12 returns no results](screenshots/100011_aes_no_false_positive.png)
+![rule.id 100011 with AES 0x12 returns no results](screenshots/100011_aes_no_false_positive.png)
 
 ## False-positive analysis
 
