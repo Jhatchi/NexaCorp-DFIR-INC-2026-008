@@ -22,6 +22,22 @@ In the incident evidence, exactly 2 of 2697 Event 4769 records used `0x17`; both
 
 Validated live on the lab Wazuh manager: a controlled roast of all five SPN service accounts produced five `rule.id 100011` alerts on the RC4 (0x17) Event 4769 records and zero on normal AES (0x12) traffic, confirming the rule fires on the attack and stays silent on legitimate tickets.
 
+## Live proof (screenshots)
+
+Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller.
+
+Rule 100011 fires on every RC4 (0x17) service ticket (the roast hit all five SPN accounts):
+
+![Wazuh Discover: rule.id 100011 fires on the five RC4 service tickets](screenshots/100011_rule_fires_5hits.png)
+
+Alert detail: one Event 4769 tagged by rule.id 100011, level 12, MITRE T1558.003 (Kerberoasting):
+
+![Wazuh alert detail showing rule.id 100011 and MITRE T1558.003](screenshots/100011_alert_detail.png)
+
+No false positives: the same query restricted to AES (0x12) returns nothing, so the rule never matches a normal service ticket:
+
+![Wazuh Discover: rule.id 100011 with AES 0x12 returns no results](screenshots/100011_aes_no_false_positive.png)
+
 ## False-positive analysis
 
 - The rule never matches AES (`0x12` / `0x11`) traffic, which is the overwhelming majority of normal service tickets.

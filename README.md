@@ -156,7 +156,7 @@ The gap is closed by a Wazuh rule that keys on the encryption type, not the acco
 </rule>
 ```
 
-Submitted to the lab Wazuh manager and deployed as **rule.id 100011**. It fires on the RC4 4769 event and stays silent on normal AES (0x12) service tickets, validated live (five rule.id 100011 alerts on a controlled roast of all five SPN accounts, zero on AES). The full design, including a correlation rule for a mass roast and a false-positive analysis, is in [`detection/README.md`](detection/README.md). Detection (this rule) and prevention (disable RC4 domain-wide, move service accounts to gMSA) are complementary controls.
+Submitted to the lab Wazuh manager and deployed as **rule.id 100011**. It fires on the RC4 4769 event and stays silent on normal AES (0x12) service tickets, validated live (five rule.id 100011 alerts on a controlled roast of all five SPN accounts, zero on AES). The full design, including a correlation rule for a mass roast, a false-positive analysis, and the dashboard screenshots, is in [`detection/README.md`](detection/README.md) and [`detection/screenshots/`](detection/screenshots/). Detection (this rule) and prevention (disable RC4 domain-wide, move service accounts to gMSA) are complementary controls.
 
 ---
 
