@@ -1,0 +1,48 @@
+<!--
+  INC-2026-008 - Phase 2 detection rule
+  Kerberoasting (MITRE ATT&CK T1558.003)
+
+  Detection idea:
+    A normal Kerberos service-ticket request (Event 4769) is issued with strong
+    AES encryption (0x11 / 0x12). A Kerberoast deliberately forces the weak legacy
+    RC4 cipher (0x17) so the ticket can be cracked offline. Keying on the
+    encryption type (not the account name) catches ANY future roast, not just
+    svc_report. Evidence: 2 of 2697 4769 events used 0x17, both from 192.168.10.31
+    (bru-ws-01) as t.remy, targeting svc_report (HTTP/bru-app-01.nexacorp.lab).
+
+  This file holds two rules:
+    - 100800 : primary. The lab validator deploys THIS rule (assigned rule.id 100011).
+    - 100801 : correlation. Escalates a mass roast (several RC4 tickets from one
+               source in a short window). For a real SOC local_rules.xml; the lab
+               validator deploys only the first rule per submission, so 100801 is
+               not deployed in the lab but is kept here as the complete design.
+
+  Submit:  lab08_submit_rule.sh kerberoast_detection.xml
+  The validator assigns the real rule.id on PASS (ignore the placeholder 100800).
+-->
+<group name="windows,active_directory,kerberos,">
+
+  <!-- Primary: a 4769 service-ticket request issued with weak RC4 encryption. -->
+  <rule id="100800" level="12">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^4769$</field>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$</field>
+    <description>Possible Kerberoasting: service ticket (4769) requested with weak RC4 encryption</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberoasting,</group>
+  </rule>
+
+  <!-- Escalation: one source requesting several RC4 service tickets in 120s. -->
+  <rule id="100801" level="14" frequency="6" timeframe="120">
+    <if_matched_sid>100800</if_matched_sid>
+    <same_field>win.eventdata.ipAddress</same_field>
+    <description>Kerberoasting mass roast: multiple RC4 service tickets from one source within 120s</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberoasting,</group>
+  </rule>
+
+</group>
