@@ -24,7 +24,7 @@ Validated live on the lab Wazuh manager: a controlled roast of all five SPN serv
 
 ## Live proof (screenshots)
 
-Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller. Each screenshot has a title banner and red callouts; the unannotated originals are in [`screenshots/raw/`](screenshots/raw/).
+Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller. Each screenshot has a title banner and red callouts; the unannotated originals are in [`screenshots/originals/`](screenshots/originals/).
 
 1. The rule fires on every RC4 (0x17) service ticket (the roast hit all five SPN accounts):
 
