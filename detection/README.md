@@ -24,19 +24,23 @@ Validated live on the lab Wazuh manager: a controlled roast of all five SPN serv
 
 ## Live proof (screenshots)
 
-Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller.
+Captured in the Wazuh dashboard (Threat Hunting > Discover) after a controlled roast against the lab domain controller. Each screenshot has a title banner and red callouts; the unannotated originals are in [`screenshots/raw/`](screenshots/raw/).
 
-Rule 100011 fires on every RC4 (0x17) service ticket (the roast hit all five SPN accounts):
+1. The rule fires on every RC4 (0x17) service ticket (the roast hit all five SPN accounts):
 
-![Wazuh Discover: rule.id 100011 fires on the five RC4 service tickets](screenshots/100011_rule_fires_5hits.png)
+![PROOF 1: rule.id 100011 fires on the RC4 service tickets in Wazuh Discover](screenshots/100011_rule_fires_5hits.png)
 
-Alert detail: one Event 4769 tagged by rule.id 100011, level 12, MITRE T1558.003 (Kerberoasting):
+2. The malicious event: a service ticket (Event 4769) issued with the weak RC4 cipher (0x17) for svc_report:
 
-![Wazuh alert detail showing rule.id 100011 and MITRE T1558.003](screenshots/100011_alert_detail.png)
+![PROOF 2: the RC4 service-ticket event showing 0x17, svc_report and 4769](screenshots/100011_event_rc4_ticket.png)
 
-No false positives: the same query restricted to AES (0x12) returns nothing, so the rule never matches a normal service ticket:
+3. The alert: the event tagged by rule.id 100011 and mapped to MITRE T1558.003 (Kerberoasting):
 
-![Wazuh Discover: rule.id 100011 with AES 0x12 returns no results](screenshots/100011_aes_no_false_positive.png)
+![PROOF 3: alert tagged with rule.id 100011 and MITRE T1558.003](screenshots/100011_alert_detail.png)
+
+4. No false positives: the same query restricted to AES (0x12) returns nothing, so the rule never matches a normal service ticket:
+
+![PROOF 4: rule.id 100011 with AES 0x12 returns no results](screenshots/100011_aes_no_false_positive.png)
 
 ## False-positive analysis
 
